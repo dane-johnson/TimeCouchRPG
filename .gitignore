@@ -1,0 +1,4 @@
+#ignore .hxproj files
+*.hxproj
+#ignore builds
+export/
