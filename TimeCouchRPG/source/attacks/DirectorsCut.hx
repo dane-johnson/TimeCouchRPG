@@ -13,7 +13,7 @@ class DirectorsCut extends Attack
 	
 	override public function doAttack(tgt:Character):AttackValue
 	{
-		tgt.health -= 1;
+		tgt.removeHealth(2);
 		return AttackValue.HIT;
 	}
 	

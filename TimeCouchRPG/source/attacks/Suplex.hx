@@ -13,7 +13,7 @@ class Suplex extends Attack
 	
 	override public function doAttack(tgt:Character):AttackValue
 	{
-		tgt.health -= 1;
+		tgt.removeHealth(1);
 		return AttackValue.HIT;
 	}
 	

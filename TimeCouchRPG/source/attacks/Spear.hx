@@ -1,23 +1,21 @@
 package attacks;
-import flixel.FlxSprite;
 import flixel.math.FlxRandom;
 
-class HolyBible extends Attack
+class Spear extends Attack
 {
-	public function new(Parent:Character)
+
+	public function new(Parent:Character) 
 	{
 		super(Parent);
-		name = "Holy Bible";
+		name = "Spear";
 	}
 	
 	override public function doAttack(tgt:Character):AttackValue
 	{
-		var hit:Bool;
-		hit = new FlxRandom().bool(30);
-		
+		var hit:Bool = new FlxRandom().bool(80);
 		if (hit)
 		{
-			tgt.removeHealth(4);
+			tgt.removeHealth(1);
 			return AttackValue.HIT;
 		}
 		else
@@ -25,4 +23,5 @@ class HolyBible extends Attack
 			return AttackValue.MISS;
 		}
 	}
+	
 }
