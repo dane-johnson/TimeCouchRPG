@@ -47,7 +47,7 @@ Try to follow the nature of MVP, what is the core mechanic and how can you make 
 * Guard
   1. Spear
   
-    1 _dmg_
+    1 _dmg_, 80% _chn_ (lol so funny if he misses)
 * Pharoh
   1. Whip
   
