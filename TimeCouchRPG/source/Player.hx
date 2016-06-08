@@ -1,27 +1,28 @@
 package;
 
+import attacks.DirectorsCut;
+import attacks.HolyBible;
+import attacks.Suplex;
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
-class Player extends FlxSprite
+class Player extends Character
 {
 	
 	public var name:PlayerName;
 	public var speed:Float = 40;
+	
 	private var lastName:PlayerName;
+	
 	public function new(?X:Float=0, ?Y:Float=0, Name:PlayerName) 
 	{
-		super(X, Y);
 		name = Name;
 		lastName = name;
 		
+		super(X, Y);
 		assignImage();
-		//Flip image when walking right or left
-		setFacingFlip(FlxObject.RIGHT, false, false);
-		setFacingFlip(FlxObject.LEFT, true, false);
-		FlxG.watch.add(this, "speed");
 	}
 	
 	private function assignImage():Void
@@ -30,13 +31,36 @@ class Player extends FlxSprite
 		
 		switch (name)
 		{
-			case AUSTIN:
+			case PlayerName.AUSTIN:
 				graphic = AssetPaths.austin__png;
-			case JOE:
+			case PlayerName.JOE:
 				graphic = AssetPaths.joe__png;
 		}
 		
 		loadGraphic(graphic, true, 16, 16);
+	}
+	
+	override public function initHealth():Void
+	{
+		switch (name)
+		{
+			case PlayerName.JOE:
+				health = 8;
+			case PlayerName.AUSTIN:
+				health = 5;
+		}
+	}
+	
+	override public function initAttacks():Void
+	{
+		switch (name)
+		{
+			case PlayerName.JOE:
+				attacks.add(new HolyBible(this));
+				attacks.add(new Suplex(this));
+			case PlayerName.AUSTIN:
+				attacks.add(new DirectorsCut(this));
+		}
 	}
 	
 	override public function draw():Void

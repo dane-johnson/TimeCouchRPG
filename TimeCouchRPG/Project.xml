@@ -77,6 +77,12 @@
 	<haxedef name="NAPE_RELEASE_BUILD" unless="debug" />
 
 	<!-- _________________________________ Custom _______________________________ -->
+	
+	
+	<haxelib name="crashdumper" if="(desktop && debug)" />
+	
+	<haxedef name="HXCPP_STACK_LINE" if="(desktop && debug)" />  <!--if you want line numbers-->
+	<haxedef name="HXCPP_STACK_TRACE" if="(desktop && debug)" />  <!--if you want stack traces-->
 
 	<!--Place custom nodes like icons here (higher priority to override the HaxeFlixel icon)-->
 </project>
