@@ -18,6 +18,7 @@ Single Player RPG experience based on popular franchise.
 * Inventory system
 * Combat menu
 * Pause menu
+* Dialog popup
 
 ##Target
 * PC, possibly web plugin
