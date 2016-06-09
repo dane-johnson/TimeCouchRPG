@@ -7,10 +7,12 @@ class Enemy extends Character
 {
 
 	public var name:EnemyName;
+	public var enemyId:Int;
 	
-	public function new(?X:Float=0, ?Y:Float=0, Name:EnemyName) 
+	public function new(?X:Float=0, ?Y:Float=0, Name:EnemyName, EnemyId:Int) 
 	{
 		name = Name;
+		enemyId = EnemyId;
 		super(X, Y);
 		initGraphics();
 	}

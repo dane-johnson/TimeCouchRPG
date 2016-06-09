@@ -6,6 +6,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.math.FlxVelocity;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
@@ -17,9 +19,20 @@ class PlayState extends FlxState
 	private var walls:FlxTilemap;
 	private var player:Player;
 	private var baddies:FlxTypedGroup<Enemy>;
+	private var ranges:FlxTypedGroup<Range>;
+	
+	private var sndAlert:FlxSound;
+	private function loadAssets():Void
+	{
+		//load sounds
+		sndAlert = FlxG.sound.load(AssetPaths.alert__wav);
+	}
 	
 	override public function create():Void
-	{		
+	{	
+		loadAssets();
+		
+		FlxG.log.redirectTraces = true;
 		map = new FlxOgmoLoader(AssetPaths.egypt__oel);
 		walls =  map.loadTilemap(AssetPaths.egypt__png, 16, 16, "walls");
 		walls.follow();
@@ -30,6 +43,9 @@ class PlayState extends FlxState
 		//wall
 		walls.setTileProperties(3, FlxObject.ANY);
 		add(walls);
+		
+		ranges = new FlxTypedGroup<Range>();
+		add(ranges);
 		
 		baddies = new FlxTypedGroup<Enemy>();
 		add(baddies);
@@ -46,8 +62,40 @@ class PlayState extends FlxState
 	override public function update(elapsed:Float):Void
 	{
 		FlxG.collide(player, walls);
-		FlxG.collide(player, baddies);
+		FlxG.overlap(player, ranges, onPlayerEnterRange);
+		FlxG.overlap(player, baddies, onPlayerCollideEnemy);
 		super.update(elapsed);
+	}
+	
+	private function onPlayerEnterRange(player:Player, range:Range):Void
+	{
+		baddies.forEach(function(e:Enemy):Void
+		{
+			if (range.enemyId == e.enemyId)
+			{
+				onEnemyAlerted(e);
+				//trigger served its purpose
+				ranges.remove(range);
+				return;
+			}
+		});
+	}
+	
+	private function onPlayerCollideEnemy(player:Player, enemy:Enemy):Void
+	{
+		//enter combat mode
+		enemy.kill();
+		player.active = true;
+	}
+	
+	private function onEnemyAlerted(e:Enemy):Void
+	{
+		//freeze the player
+		player.active = false;
+		//run towards him
+		FlxVelocity.moveTowardsObject(e, player);
+		//play the alert
+		sndAlert.play();
 	}
 	
 	private function placeEntities(entityName:String, entityData:Xml):Void
@@ -63,14 +111,22 @@ class PlayState extends FlxState
 		{
 			var e:Enemy = null;
 			var name = entityData.get("name");
+			var enemyId:Int = Std.parseInt(entityData.get("enemy_id"));
 			switch (name)
 			{
 				case "PHAROH":
-					e = new Enemy(x, y, EnemyName.PHAROH);
+					e = new Enemy(x, y, EnemyName.PHAROH, enemyId);
 				case "GUARD":
-					e = new Enemy(x, y, EnemyName.GUARD);
+					e = new Enemy(x, y, EnemyName.GUARD, enemyId);
 			}
 			baddies.add(e);
+		}
+		if (entityName == "sight_range")
+		{
+			var width:Int = Std.parseInt(entityData.get("width"));
+			var height:Int = Std.parseInt(entityData.get("height"));
+			var enemyId = Std.parseInt(entityData.get("enemy_id"));
+			ranges.add(new Range(x, y, width, height, enemyId));
 		}
 	}
 }

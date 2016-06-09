@@ -30,10 +30,14 @@
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1
 -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1</walls>
   <entities>
-    <enemy id="3" x="352" y="176" name="GUARD" />
-    <enemy id="4" x="528" y="176" name="GUARD" />
-    <enemy id="5" x="528" y="272" name="GUARD" />
-    <enemy id="6" x="352" y="288" name="PHAROH" />
+    <enemy id="3" x="352" y="176" name="GUARD" enemy_id="1" />
+    <enemy id="4" x="528" y="176" name="GUARD" enemy_id="2" />
+    <enemy id="5" x="528" y="272" name="GUARD" enemy_id="3" />
+    <enemy id="6" x="352" y="288" name="PHAROH" enemy_id="4" />
     <player id="0" x="224" y="272" />
+    <sight_range id="1" x="320" y="128" width="48" height="112" enemy_id="1" />
+    <sight_range id="2" x="464" y="176" width="112" height="64" enemy_id="2" />
+    <sight_range id="7" x="448" y="256" width="128" height="48" enemy_id="3" />
+    <sight_range id="8" x="368" y="288" width="16" height="16" enemy_id="4" />
   </entities>
 </level>
