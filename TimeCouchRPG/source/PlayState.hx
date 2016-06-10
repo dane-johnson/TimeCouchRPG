@@ -20,6 +20,7 @@ class PlayState extends FlxState
 	private var player:Player;
 	private var baddies:FlxTypedGroup<Enemy>;
 	private var ranges:FlxTypedGroup<Range>;
+	private var combatHUD:CombatHUD;
 	
 	private var sndAlert:FlxSound;
 	private function loadAssets():Void
@@ -30,9 +31,12 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{	
+		#if debug
+		FlxG.log.redirectTraces = true;
+		#end
+		
 		loadAssets();
 		
-		FlxG.log.redirectTraces = true;
 		map = new FlxOgmoLoader(AssetPaths.egypt__oel);
 		walls =  map.loadTilemap(AssetPaths.egypt__png, 16, 16, "walls");
 		walls.follow();
@@ -55,6 +59,9 @@ class PlayState extends FlxState
 		add(player);
 		
 		FlxG.camera.follow(player);
+		
+		combatHUD = new CombatHUD();
+		add(combatHUD);
 		
 		super.create();
 	}
@@ -83,14 +90,23 @@ class PlayState extends FlxState
 	
 	private function onPlayerCollideEnemy(player:Player, enemy:Enemy):Void
 	{
-		//enter combat mode
-		enemy.kill();
+		//stop running baddie
+		enemy.velocity.set();
+		//reactivate player
 		player.active = true;
+		//enter combat mode
+		initCombat(enemy);
+	}
+	
+	private function initCombat(enemy:Enemy)
+	{
+		combatHUD.initCombat(player, enemy);
 	}
 	
 	private function onEnemyAlerted(e:Enemy):Void
 	{
 		//freeze the player
+		player.velocity.set();
 		player.active = false;
 		//run towards him
 		FlxVelocity.moveTowardsObject(e, player);
@@ -115,9 +131,9 @@ class PlayState extends FlxState
 			switch (name)
 			{
 				case "PHAROH":
-					e = new Enemy(x, y, EnemyName.PHAROH, enemyId);
+					e = new Enemy(x, y, PHAROH, enemyId);
 				case "GUARD":
-					e = new Enemy(x, y, EnemyName.GUARD, enemyId);
+					e = new Enemy(x, y, GUARD, enemyId);
 			}
 			baddies.add(e);
 		}

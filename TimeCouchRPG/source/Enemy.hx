@@ -21,9 +21,9 @@ class Enemy extends Character
 	{
 		switch (name)
 		{
-			case EnemyName.GUARD:
+			case GUARD:
 				health = 2;
-			case EnemyName.PHAROH:
+			case PHAROH:
 				health = 10;
 		}
 	}
@@ -32,9 +32,9 @@ class Enemy extends Character
 	{
 		switch (name)
 		{
-			case EnemyName.GUARD:
+			case GUARD:
 				attacks.add(new Spear(this));
-			case EnemyName.PHAROH:
+			case PHAROH:
 				attacks.add(new Whip(this));
 				attacks.add(new Plague(this));
 		}
@@ -44,11 +44,17 @@ class Enemy extends Character
 	{
 		switch(name)
 		{
-			case EnemyName.GUARD:
+			case GUARD:
 				loadGraphic(AssetPaths.guard__png);
 			default:
 				return;
 			//Add pharoh once art done
 		}
 	}
+}
+
+enum EnemyName
+{
+	GUARD;
+	PHAROH;
 }

@@ -1,11 +1,13 @@
 package;
 
 import flixel.FlxSprite;
+import flixel.math.FlxPoint;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Character extends FlxSprite
 {	
 	public var attacks:List<Attack>;
+	public var inCombat:Bool = false;
 
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
@@ -27,6 +29,12 @@ class Character extends FlxSprite
 		{
 			health = health - amt;
 		}
+	}
+	
+	public function setPos(pos:FlxPoint)
+	{
+		x = pos.x;
+		y = pos.y;
 	}
 	
 	public function initHealth():Void{}

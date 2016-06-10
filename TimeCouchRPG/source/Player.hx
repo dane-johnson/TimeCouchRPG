@@ -76,7 +76,10 @@ class Player extends Character
 	
 	override public function update(elapsed:Float):Void
 	{
-		move();
+		if (!inCombat)
+		{
+			move();
+		}
 		super.update(elapsed);
 	}
 	
