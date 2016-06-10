@@ -1,6 +1,7 @@
 package;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.StrNameLabel;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -13,43 +14,23 @@ using flixel.util.FlxSpriteUtil;
 class CombatHUD extends FlxTypedGroup<FlxSprite>
 {
 
-	private var sprBack:FlxSprite;
+	private var ui:FlxUI;
+	
 	private var player:Player;
 	private var enemy:Enemy;
 	private var playerTurn:Bool;
-	private var posPlayer:FlxPoint;
-	private var posEnemy:FlxPoint;
 	
 	private var menuAttacks:FlxUIDropDownMenu;
 	private var attackLabels:Array<StrNameLabel>;
 	
-	public function new() 
+	public function new(UI:FlxUI) 
 	{
 		super();
 		
-		sprBack = new FlxSprite().makeGraphic(120, 120, FlxColor.BLUE);
-		sprBack.drawRect(1, 1, 118, 44, FlxColor.WHITE);
-		sprBack.drawRect(1, 46, 118, 73, FlxColor.WHITE);
-		sprBack.screenCenter();
-		add(sprBack);
+		ui = UI;
+		ui.visible = false;
 		
-		var x, y:Float;
-		
-		x = FlxMath.lerp(0, 120, .2) - 8;
-		y = 22;
-		posPlayer = new FlxPoint(x, y);
-		posPlayer.addPoint(sprBack.getPosition());
-		
-		x = FlxMath.lerp(0, 120, .8) - 8;
-		posEnemy = new FlxPoint(x, y);
-		posEnemy.addPoint(sprBack.getPosition());
-		
-		attackLabels = new Array<StrNameLabel>();
-		//should never see this
-		attackLabels.push(new StrNameLabel("error", "error"));
-		menuAttacks = new FlxUIDropDownMenu(0, 0, attackLabels);
-		//menuAttacks.getPosition().addPoint(sprBack.getPosition());
-		menuAttacks.visible = true;
+		menuAttacks = cast ui.getAsset("attack_list");
 		
 		//dont move with camera
 		forEach( function(sprite:FlxSprite)
@@ -63,6 +44,8 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	
 	public function initCombat(P:Player, E:Enemy):Void
 	{
+		ui.visible = true;
+		
 		player = P;
 		add(player);
 		enemy = E;
@@ -70,9 +53,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		player.inCombat = true;
 		enemy.inCombat = true;
-		
-		player.setPos(posPlayer);
-		enemy.setPos(posEnemy);
 		
 		attackLabels = new Array<StrNameLabel>();
 		for (attack in player.attacks)

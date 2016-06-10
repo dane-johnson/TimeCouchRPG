@@ -2,8 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.addons.ui.FlxUIState;
 
-class TestState extends FlxState
+class TestState extends FlxUIState
 {
 
 	private var player:Player;
@@ -17,14 +18,16 @@ class TestState extends FlxState
 		enemy = new Enemy(1, 0, GUARD, 0);
 		add(enemy);
 		
-		combatHUD = new CombatHUD();
-		add(combatHUD);
-		
+		_xml_id = "combat_state";
 		super.create();
+		
+		combatHUD = new CombatHUD(_ui);
+		add(combatHUD);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
+		super.update(elapsed);
 		FlxG.overlap(player, enemy, initCombat);
 	}
 	

@@ -20,6 +20,6 @@ class Main extends Sprite
 		//starts the crashDumper
 		#end
 		//addChild(new FlxGame(320, 240, MenuState, 1, 60, 60, true, false));
-		addChild(new FlxGame(320, 240, TestState, 1, 60, 60, true, false));
+		addChild(new FlxGame(640, 480, TestState, 1, 60, 60, true, false));
 	}
 }
