@@ -82,10 +82,16 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	
 	public function doSelectedAttack():Void
 	{
+		trace("attacking!");
 		var strAttack:String = menuAttacks.selectedId;
 		
 		var attack:Attack = player.attacks.filter(function(a){return a.name == strAttack; })[0];
-		attack.doAttack(enemy);
+		var attackVal:AttackValue = attack.doAttack(enemy);
+		
+		//check if enemy dead
+			//end combat
+			
+			//switch turns
 	}
 }
 

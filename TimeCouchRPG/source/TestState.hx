@@ -44,26 +44,19 @@ class TestState extends FlxUIState
 	
 	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
 	{
-		//TODO this isn't always working, find a way of debugging
 		super.getEvent(id, sender, data, params);
 		if (params != null)
 		{
-			switch (cast(params[0], String))
+			switch(cast(params[0], String))
 			{
-				case "attack_button":
-					switch (id)
+				case 'attack_button':
+					if (id == FlxUITypedButton.CLICK_EVENT)
 					{
-						case FlxUITypedButton.CLICK_EVENT:
-							combatHUD.doSelectedAttack();
-					}
-				case "attack_list":
-					switch (id)
-					{
-						case FlxUIDropDownMenu.CLICK_EVENT:
-							combatHUD.updateSelectedAttack(cast(data, String));
+						combatHUD.doSelectedAttack();
 					}
 			}
 		}
+		//detect a drop down update
 	}
 	
 }
