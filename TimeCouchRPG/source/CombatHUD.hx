@@ -2,6 +2,8 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIButton;
+import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.StrNameLabel;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
@@ -9,6 +11,7 @@ import flixel.math.FlxPoint;
 import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUIDropDownMenu;
 using flixel.util.FlxSpriteUtil;
+using Lambda;
 
 
 class CombatHUD extends FlxTypedGroup<FlxSprite>
@@ -70,6 +73,19 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	{
 		//TODO
 		super.update(elapsed);
+	}
+	
+	public function updateSelectedAttack(name:String):Void
+	{
+		menuAttacks.selectedId = name;
+	}
+	
+	public function doSelectedAttack():Void
+	{
+		var strAttack:String = menuAttacks.selectedId;
+		
+		var attack:Attack = player.attacks.filter(function(a){return a.name == strAttack; })[0];
+		attack.doAttack(enemy);
 	}
 }
 

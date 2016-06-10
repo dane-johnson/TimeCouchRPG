@@ -18,9 +18,11 @@
 		</region>
 		<button id="attack_button" label="Attack" x="20" y="10" group="combatUI">
 			<anchor x="action_display.left" y="action_display.top" x-flush="left" y-flush="top" />
+			<param type="string" value="attack_button" />
 		</button>
 		<dropdown id="attack_list" x="0" y="10" group="combatUI">
 			<anchor x="attack_button.center" y="attack_button.bottom" x-flush="center" y-flush="top" />
+			<param type="string" value="attack_list" />
 		</dropdown>
 		
 </data>

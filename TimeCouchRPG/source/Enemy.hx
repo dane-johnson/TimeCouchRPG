@@ -33,10 +33,10 @@ class Enemy extends Character
 		switch (name)
 		{
 			case GUARD:
-				attacks.add(new Spear(this));
+				attacks.push(new Spear(this));
 			case PHAROH:
-				attacks.add(new Whip(this));
-				attacks.add(new Plague(this));
+				attacks.push(new Whip(this));
+				attacks.push(new Plague(this));
 		}
 	}
 	

@@ -6,14 +6,14 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 
 class Character extends FlxSprite
 {	
-	public var attacks:List<Attack>;
+	public var attacks:Array<Attack>;
 	public var inCombat:Bool = false;
 
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{
 		super(X, Y);
 		
-		attacks = new List<Attack>();
+		attacks = new Array<Attack>();
 		
 		initHealth();
 		initAttacks();

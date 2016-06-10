@@ -56,10 +56,10 @@ class Player extends Character
 		switch (name)
 		{
 			case PlayerName.JOE:
-				attacks.add(new HolyBible(this));
-				attacks.add(new Suplex(this));
+				attacks.push(new HolyBible(this));
+				attacks.push(new Suplex(this));
 			case PlayerName.AUSTIN:
-				attacks.add(new DirectorsCut(this));
+				attacks.push(new DirectorsCut(this));
 		}
 	}
 	

@@ -2,7 +2,9 @@ package;
 
 import flixel.FlxG;
 import flixel.FlxState;
+import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIState;
+import flixel.addons.ui.FlxUITypedButton;
 
 class TestState extends FlxUIState
 {
@@ -12,6 +14,10 @@ class TestState extends FlxUIState
 	private var combatHUD:CombatHUD;
 	override public function create() 
 	{
+		#if debug
+		FlxG.log.redirectTraces = true;
+		#end
+		
 		player = new Player(0, 0, JOE);
 		add(player);
 		
@@ -34,6 +40,30 @@ class TestState extends FlxUIState
 	private function initCombat(P:Player, E:Enemy)
 	{
 		combatHUD.initCombat(P, E);
+	}
+	
+	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
+	{
+		//TODO this isn't always working, find a way of debugging
+		super.getEvent(id, sender, data, params);
+		if (params != null)
+		{
+			switch (cast(params[0], String))
+			{
+				case "attack_button":
+					switch (id)
+					{
+						case FlxUITypedButton.CLICK_EVENT:
+							combatHUD.doSelectedAttack();
+					}
+				case "attack_list":
+					switch (id)
+					{
+						case FlxUIDropDownMenu.CLICK_EVENT:
+							combatHUD.updateSelectedAttack(cast(data, String));
+					}
+			}
+		}
 	}
 	
 }
