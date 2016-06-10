@@ -19,6 +19,6 @@ class Main extends Sprite
 		var crashDumper = new CrashDumper(unique_id); 
 		//starts the crashDumper
 		#end
-		addChild(new FlxGame(320, 240, MenuState));
+		addChild(new FlxGame(640, 640, MenuState, 1, 60, 60, true, false));
 	}
 }

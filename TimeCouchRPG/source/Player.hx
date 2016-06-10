@@ -12,7 +12,7 @@ class Player extends Character
 {
 	
 	public var name:PlayerName;
-	public var speed:Float = 40;
+	public var speed:Float = 100;
 	
 	private var lastName:PlayerName;
 	
@@ -37,7 +37,7 @@ class Player extends Character
 				graphic = AssetPaths.joe__png;
 		}
 		
-		loadGraphic(graphic, true, 16, 16);
+		loadGraphic(graphic);
 	}
 	
 	override public function initHealth():Void

@@ -5,6 +5,7 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.editors.ogmo.FlxOgmoLoader;
+import flixel.addons.ui.FlxUIState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxVelocity;
 import flixel.system.FlxSound;
@@ -34,7 +35,7 @@ class PlayState extends FlxState
 		
 		FlxG.log.redirectTraces = true;
 		map = new FlxOgmoLoader(AssetPaths.egypt__oel);
-		walls =  map.loadTilemap(AssetPaths.egypt__png, 16, 16, "walls");
+		walls =  map.loadTilemap(AssetPaths.egypt__png, 32, 32, "walls");
 		walls.follow();
 		//sand
 		walls.setTileProperties(2, FlxObject.NONE);
@@ -57,6 +58,9 @@ class PlayState extends FlxState
 		FlxG.camera.follow(player);
 		
 		super.create();
+		
+		combatHUD = new CombatHUD(_ui);
+		add(combatHUD);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -93,7 +97,7 @@ class PlayState extends FlxState
 		//freeze the player
 		player.active = false;
 		//run towards him
-		FlxVelocity.moveTowardsObject(e, player);
+		FlxVelocity.moveTowardsObject(e, player, 140);
 		//play the alert
 		sndAlert.play();
 	}
