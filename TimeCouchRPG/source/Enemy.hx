@@ -8,11 +8,13 @@ class Enemy extends Character
 
 	public var name:EnemyName;
 	public var enemyId:Int;
+	public var attackPercentages: Array<Float>;
 	
 	public function new(?X:Float=0, ?Y:Float=0, Name:EnemyName, EnemyId:Int) 
 	{
 		name = Name;
 		enemyId = EnemyId;
+		attackPercentages = new Array<Float>();
 		super(X, Y);
 		initGraphics();
 	}
@@ -22,10 +24,12 @@ class Enemy extends Character
 		switch (name)
 		{
 			case GUARD:
-				health = 2;
+				maxHealth = 2;
 			case PHAROH:
-				health = 10;
+				maxHealth = 10;
 		}
+		
+		health = maxHealth;
 	}
 	
 	override public function initAttacks():Void
@@ -34,9 +38,12 @@ class Enemy extends Character
 		{
 			case GUARD:
 				attacks.push(new Spear(this));
+				attackPercentages.push(1);
 			case PHAROH:
 				attacks.push(new Whip(this));
+				attackPercentages.push(.8);
 				attacks.push(new Plague(this));
+				attackPercentages.push(1);
 		}
 	}
 	

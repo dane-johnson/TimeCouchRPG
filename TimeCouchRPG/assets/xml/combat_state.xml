@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <data>
-	<group id="combatUI" />
-		<sprite id="back" color="blue" x="0" y="0" width="200" height="300" group="combatUI" >
+	<definition id="health_bar" x="0" y="0" width="40" height="20" color="red" align="center" />
+	
+		<sprite id="back" color="blue" x="0" y="0" width="200" height="300">
 			<anchor x="center" x-flush="center" y="center" y-flush="center" />
 		</sprite>
-		<sprite id="character_display" color="white" x="2" y="2" width="196" height="96" group="combatUI" >
+		<sprite id="character_display" color="white" x="2" y="2" width="196" height="96"  >
 			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
 		</sprite>
-		<sprite id="action_display" color="white" x="2" y="102" width="196" height="196" group="combatUI" >
+		<sprite id="action_display" color="white" x="2" y="102" width="196" height="196" >
 			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
 		</sprite>
-		<region id="player_position" x="-50" y="0" width="32" height="32" group="combatUI">
+		<region id="player_position" x="-50" y="0" width="32" height="32" >
 			<anchor x="character_display.center" y="character_display.center" x-flush="center" y-flush="center" />
 		</region>
-		<region id="enemy_position" x="50" y="0" width="32" height="32" group="combatUI">
+		<region id="enemy_position" x="50" y="0" width="32" height="32" >
 			<anchor x="character_display.center" y="character_display.center" x-flush="center" y-flush="center" />
 		</region>
-		<button id="attack_button" label="Attack" x="20" y="10" group="combatUI">
+		<text id="player_health" use_def="health_bar" text="player health here">
+			<anchor x="player_position.center" y="player_position.bottom" x-flush="center" y-flush="top" />
+		</text>
+		<text id="enemy_health" use_def="health_bar" text="enemy health here">
+			<anchor x="enemy_position.center" y="enemy_position.bottom" x-flush="center" y-flush="top" />
+		</text>
+		
+		<button id="attack_button" label="Attack" x="20" y="10">
 			<anchor x="action_display.left" y="action_display.top" x-flush="left" y-flush="top" />
 			<param type="string" value="attack_button" />
 		</button>
-		<dropdown id="attack_list" x="0" y="10" group="combatUI">
+		<dropdown id="attack_list" x="0" y="10" >
 			<anchor x="attack_button.center" y="attack_button.bottom" x-flush="center" y-flush="top" />
 			<param type="string" value="attack_list" />
 		</dropdown>

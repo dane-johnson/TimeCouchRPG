@@ -8,6 +8,7 @@ class Character extends FlxSprite
 {	
 	public var attacks:Array<Attack>;
 	public var inCombat:Bool = false;
+	public var maxHealth:Float;
 
 	public function new(?X:Float=0, ?Y:Float=0) 
 	{

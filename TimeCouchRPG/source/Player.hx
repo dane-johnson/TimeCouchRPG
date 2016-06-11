@@ -45,10 +45,12 @@ class Player extends Character
 		switch (name)
 		{
 			case PlayerName.JOE:
-				health = 8;
+				maxHealth = 8;
 			case PlayerName.AUSTIN:
-				health = 5;
+				maxHealth = 5;
 		}
+		
+		health = maxHealth;
 	}
 	
 	override public function initAttacks():Void
