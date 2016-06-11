@@ -8,9 +8,13 @@ import flixel.addons.ui.FlxUIRegion;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.StrNameLabel;
+import flixel.addons.ui.interfaces.IFlxUIWidget;
+import flixel.addons.util.FlxFSM.StatePool;
+import flixel.group.FlxGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
 import flixel.util.FlxColor;
 import flixel.addons.ui.FlxUIDropDownMenu;
 using flixel.util.FlxSpriteUtil;
@@ -20,6 +24,9 @@ using Lambda;
 class CombatHUD extends FlxTypedGroup<FlxSprite>
 {
 
+	private var playerInitPosition:FlxPoint;
+	private var enemyInitPosition:FlxPoint;
+	
 	private var ui:FlxUI;
 	
 	private var player:Player;
@@ -32,15 +39,20 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	private var enemyPos:FlxUIRegion;
 	private var playerHealthBar:FlxUIText;
 	private var enemyHealthBar:FlxUIText;
+	private var userInterface:FlxUIGroup;
+	
+	public var state:State;
 	
 	public function new(UI:FlxUI) 
 	{
 		super();
 		
 		ui = UI;
-		ui.visible = false;
 		
+		userInterface = new FlxUIGroup();
 		menuAttacks = cast ui.getAsset("attack_list");
+		userInterface.add(cast menuAttacks);
+		userInterface.add(cast ui.getAsset("attack_button"));
 		
 		playerPos = cast ui.getAsset("player_position");
 		enemyPos = cast ui.getAsset("enemy_position");
@@ -53,14 +65,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			sprite.scrollFactor.set();
 		});
 		
-		active = false;
-		visible = false;
+		switchState(DEACTIVATED);
 	}
 	
 	public function initCombat(P:Player, E:Enemy):Void
-	{
-		ui.visible = true;
-		
+	{		
 		player = P;
 		add(player);
 		enemy = E;
@@ -68,7 +77,9 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		player.inCombat = true;
 		enemy.inCombat = true;
-	
+		
+		playerInitPosition = player.getPosition();
+		enemyInitPosition = enemy.getPosition();
 		player.setPos(playerPos.getPosition());
 		enemy.setPos(enemyPos.getPosition());
 	
@@ -81,17 +92,24 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		}
 		menuAttacks.setData(attackLabels);
 		
-		playerTurn = true;
-		active = true;
-		visible = true;
+		switchState(ACTIVATING);
+		switchState(WAITING);
 	}
 	
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-		if (active && !playerTurn)
+		if (state == SWITCHING && !playerTurn)
 		{
-			//ai takes turn
+			userInterface.active = false;
+			enemyDoAttackTurn();
+			switchState(SWITCHING);
+			playerTurn = true;
+		}
+		else if (state == SWITCHING && playerTurn)
+		{
+			userInterface.active = true;
+			switchState(WAITING);
 		}
 	}
 	
@@ -116,18 +134,28 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		if (enemy.health == 0)
 		{
 			//end combat
+			switchState(DEACTIVATED);
 			resolve(WIN);
 		}
 		else
 		{
 			//switch turns
 			playerTurn = false;
+			userInterface.active = false;
+			switchState(SWITCHING);
 		}
 	}
 	
 	function resolve(outcome:Outcome):Void
 	{
-		
+		switch (outcome)
+		{
+			case WIN:
+				enemy.kill();
+				player.setPos(playerInitPosition);
+			default:
+				
+		}
 	}
 	
 	function updateHealth()
@@ -138,6 +166,38 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			enemyHealthBar.text =  "" + enemy.health + " / " + enemy.maxHealth;
 		}
 	}
+	
+	private function enemyDoAttackTurn()
+	{
+		//ai takes turn
+		var selection:Float = new FlxRandom().float();
+		var attack = enemy.attacks[enemy.attackPercentages
+			.indexOf(enemy.attackPercentages
+			.filter(function (f:Float){return f <= selection; }).pop())];
+		var attackVal = attack.doAttack(player);
+		//must reference value
+		if (attackVal == AttackValue.HIT){}
+		updateHealth();
+	}
+	
+	private function switchState(S:State):Void
+	{
+		state = S;
+		
+		switch(state)
+		{
+			case DEACTIVATED:
+				active = false;
+				visible = false;
+				ui.visible = false;
+			case ACTIVATING:
+				playerTurn = true;
+				active = true;
+				visible = true;
+				ui.visible = true;
+			default:
+		}
+	}
 }
 
 enum Outcome
@@ -146,4 +206,14 @@ enum Outcome
 	LOSE;
 	ESCAPE;
 	NONE;
+}
+
+enum State
+{
+	WAITING;
+	ANIMATING;
+	UPDATING;
+	SWITCHING;
+	DEACTIVATED;
+	ACTIVATING;
 }

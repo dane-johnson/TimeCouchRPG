@@ -38,12 +38,12 @@ class Enemy extends Character
 		{
 			case GUARD:
 				attacks.push(new Spear(this));
-				attackPercentages.push(1);
+				attackPercentages.push(0);
 			case PHAROH:
 				attacks.push(new Whip(this));
-				attackPercentages.push(.8);
+				attackPercentages.push(0);
 				attacks.push(new Plague(this));
-				attackPercentages.push(1);
+				attackPercentages.push(0.8);
 		}
 	}
 	
