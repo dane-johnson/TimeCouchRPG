@@ -24,11 +24,7 @@ class TestState extends CombatState
 		enemy = new Enemy(1, 0, GUARD, 0);
 		add(enemy);
 		
-		_xml_id = "combat_state";
 		super.create();
-		
-		combatHUD = new CombatHUD(_ui);
-		add(combatHUD);
 	}
 	
 	override public function update(elapsed:Float):Void

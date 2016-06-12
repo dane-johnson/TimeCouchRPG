@@ -1,5 +1,6 @@
 package;
 
+import flixel.FlxG;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton;
 
@@ -12,7 +13,7 @@ class CombatState extends FlxUIState
 	{
 		_xml_id = "combat_state";
 		super.create();
-		combatHUD = new CombatHUD(_ui);
+		combatHUD = new CombatHUD(_ui, this);
 		
 		add(combatHUD);
 	}
@@ -36,7 +37,17 @@ class CombatState extends FlxUIState
 					}
 			}
 		}
-		//detect a drop down update
+	}
+	
+	public function postCombat(outcome:CombatHUD.Outcome):Void
+	{
+		switch(outcome)
+		{
+			case WIN:
+			case LOSE:
+				FlxG.switchState(new MenuState());
+			default:
+		}
 	}
 	
 }

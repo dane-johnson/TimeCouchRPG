@@ -60,7 +60,6 @@ class PlayState extends CombatState
 		
 		FlxG.camera.follow(player);
 		
-		
 		super.create();
 	}
 

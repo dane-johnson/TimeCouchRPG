@@ -2,13 +2,13 @@
 <data>
 	<definition id="health_bar" x="0" y="0" width="40" height="20" color="red" align="center" />
 	
-		<sprite id="back" color="blue" x="0" y="0" width="200" height="300">
+		<sprite id="back" color="blue" x="0" y="0" width="300" height="300">
 			<anchor x="center" x-flush="center" y="center" y-flush="center" />
 		</sprite>
-		<sprite id="character_display" color="white" x="2" y="2" width="196" height="96"  >
+		<sprite id="character_display" color="white" x="2" y="2" width="296" height="96"  >
 			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
 		</sprite>
-		<sprite id="action_display" color="white" x="2" y="102" width="196" height="196" >
+		<sprite id="action_display" color="white" x="2" y="102" width="296" height="196" >
 			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
 		</sprite>
 		<region id="player_position" x="-50" y="0" width="32" height="32" >
@@ -31,6 +31,14 @@
 		<dropdown id="attack_list" x="0" y="10" >
 			<anchor x="attack_button.center" y="attack_button.bottom" x-flush="center" y-flush="top" />
 			<param type="string" value="attack_list" />
+		</dropdown>
+		<button id="item_button" label="Use" x="-20" y="10">
+			<anchor x="action_display.right" y="action_display.top" x-flush="right" y-flush="top" />
+			<param type="string" value="item_button" />
+		</button>
+		<dropdown id="item_list" x="0" y="10" >
+			<anchor x="item_button.center" y="item_button.bottom" x-flush="center" y-flush="top" />
+			<param type="string" value="item_list" />
 		</dropdown>
 		
 </data>

@@ -1,10 +1,13 @@
 package;
+import flixel.FlxBasic;
 import flixel.FlxG;
+import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.ui.FlxUI;
 import flixel.addons.ui.FlxUIButton;
 import flixel.addons.ui.FlxUIGroup;
 import flixel.addons.ui.FlxUIRegion;
+import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUITypedButton;
 import flixel.addons.ui.StrNameLabel;
@@ -28,6 +31,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	private var enemyInitPosition:FlxPoint;
 	
 	private var ui:FlxUI;
+	private var parent:CombatState;
 	
 	private var player:Player;
 	private var enemy:Enemy;
@@ -43,9 +47,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	
 	public var state:State;
 	
-	public function new(UI:FlxUI) 
+	public function new(UI:FlxUI, Parent:CombatState) 
 	{
 		super();
+		
+		parent = Parent;
 		
 		ui = UI;
 		
@@ -59,12 +65,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		playerHealthBar = cast ui.getAsset("player_health");
 		enemyHealthBar = cast ui.getAsset("enemy_health");
 		
-		//dont move with camera
-		forEach( function(sprite:FlxSprite)
-		{
-			sprite.scrollFactor.set();
-		});
-		
 		switchState(DEACTIVATED);
 	}
 	
@@ -77,6 +77,11 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		
 		player.inCombat = true;
 		enemy.inCombat = true;
+		
+		//This fixes it, but why?
+		FlxG.camera.follow(null);
+		ui.setPosition(FlxG.camera.scroll.x, FlxG.camera.scroll.y);
+
 		
 		playerInitPosition = player.getPosition();
 		enemyInitPosition = enemy.getPosition();
@@ -103,8 +108,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		{
 			userInterface.active = false;
 			enemyDoAttackTurn();
-			switchState(SWITCHING);
-			playerTurn = true;
 		}
 		else if (state == SWITCHING && playerTurn)
 		{
@@ -146,19 +149,6 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	function resolve(outcome:Outcome):Void
-	{
-		switch (outcome)
-		{
-			case WIN:
-				enemy.kill();
-				player.setPos(playerInitPosition);
-				player.inCombat = false;
-			default:
-				
-		}
-	}
-	
 	function updateHealth()
 	{
 		if (playerHealthBar.active && enemyHealthBar.active)
@@ -168,7 +158,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
-	private function enemyDoAttackTurn()
+	private function enemyDoAttackTurn():Void
 	{
 		//ai takes turn
 		var selection:Float = new FlxRandom().float();
@@ -179,6 +169,18 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		//must reference value
 		if (attackVal == AttackValue.HIT){}
 		updateHealth();
+		
+		//Check if player dead
+		if (player.health == 0)
+		{
+			switchState(DEACTIVATED);
+			resolve(LOSE);
+		}
+		else
+		{
+			switchState(SWITCHING);
+			playerTurn = true;
+		}
 	}
 	
 	private function switchState(S:State):Void
@@ -197,6 +199,23 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 				visible = true;
 				ui.visible = true;
 			default:
+		}
+	}
+	
+	function resolve(outcome:Outcome):Void
+	{
+		FlxG.camera.follow(player);
+		switch (outcome)
+		{
+			case WIN:
+				enemy.kill();
+				player.setPos(playerInitPosition);
+				player.inCombat = false;
+				parent.postCombat(WIN);
+			case LOSE:
+				parent.postCombat(LOSE);
+			default:
+				parent.postCombat(outcome);
 		}
 	}
 }
