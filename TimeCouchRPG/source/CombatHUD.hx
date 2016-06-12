@@ -153,6 +153,7 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			case WIN:
 				enemy.kill();
 				player.setPos(playerInitPosition);
+				player.inCombat = false;
 			default:
 				
 		}

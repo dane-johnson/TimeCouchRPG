@@ -6,12 +6,12 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIState;
 import flixel.addons.ui.FlxUITypedButton;
 
-class TestState extends FlxUIState
+class TestState extends CombatState
 {
 
 	private var player:Player;
 	private var enemy:Enemy;
-	private var combatHUD:CombatHUD;
+	
 	override public function create() 
 	{
 		#if debug
@@ -35,28 +35,6 @@ class TestState extends FlxUIState
 	{
 		super.update(elapsed);
 		FlxG.overlap(player, enemy, initCombat);
-	}
-	
-	private function initCombat(P:Player, E:Enemy)
-	{
-		combatHUD.initCombat(P, E);
-	}
-	
-	override public function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>):Void
-	{
-		super.getEvent(id, sender, data, params);
-		if (params != null)
-		{
-			switch(cast(params[0], String))
-			{
-				case 'attack_button':
-					if (id == FlxUITypedButton.CLICK_EVENT)
-					{
-						combatHUD.doSelectedAttack();
-					}
-			}
-		}
-		//detect a drop down update
 	}
 	
 }

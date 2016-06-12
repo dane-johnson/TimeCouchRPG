@@ -14,14 +14,13 @@ import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
 
-class PlayState extends FlxUIState
+class PlayState extends CombatState
 {
 	private var map:FlxOgmoLoader;
 	private var walls:FlxTilemap;
 	private var player:Player;
 	private var baddies:FlxTypedGroup<Enemy>;
 	private var ranges:FlxTypedGroup<Range>;
-	private var combatHUD:CombatHUD;
 	
 	private var sndAlert:FlxSound;
 	private function loadAssets():Void
@@ -61,11 +60,8 @@ class PlayState extends FlxUIState
 		
 		FlxG.camera.follow(player);
 		
-		_xml_id = "combat_state";
-		super.create();
 		
-		combatHUD = new CombatHUD(_ui);
-		add(combatHUD);
+		super.create();
 	}
 
 	override public function update(elapsed:Float):Void
@@ -97,12 +93,7 @@ class PlayState extends FlxUIState
 		//reactivate player
 		player.active = true;
 		//enter combat mode
-		initCombat(enemy);
-	}
-	
-	private function initCombat(enemy:Enemy)
-	{
-		combatHUD.initCombat(player, enemy);
+		initCombat(player, enemy);
 	}
 	
 	private function onEnemyAlerted(e:Enemy):Void
