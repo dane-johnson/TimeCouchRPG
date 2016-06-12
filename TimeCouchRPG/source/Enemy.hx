@@ -53,9 +53,10 @@ class Enemy extends Character
 		{
 			case GUARD:
 				loadGraphic(AssetPaths.guard__png);
+			case PHAROH:
+				loadGraphic(AssetPaths.pharoh__png);
 			default:
 				return;
-			//Add pharoh once art done
 		}
 	}
 }
