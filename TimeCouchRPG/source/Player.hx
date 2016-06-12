@@ -11,6 +11,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class Player extends Character
 {
 	
+	public var items:Array<Item>;
 	public var name:PlayerName;
 	public var speed:Float = 100;
 	
@@ -20,6 +21,7 @@ class Player extends Character
 	{
 		name = Name;
 		lastName = name;
+		items = new Array<Item>();
 		
 		super(X, Y);
 		assignImage();

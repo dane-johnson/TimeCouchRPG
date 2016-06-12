@@ -39,8 +39,12 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 	
 	private var menuAttacks:FlxUIDropDownMenu;
 	private var attackLabels:Array<StrNameLabel>;
+	private var menuItems:FlxUIDropDownMenu;
+	private var itemLabels:Array<StrNameLabel>;
+	
 	private var playerPos:FlxUIRegion;
 	private var enemyPos:FlxUIRegion;
+	
 	private var playerHealthBar:FlxUIText;
 	private var enemyHealthBar:FlxUIText;
 	private var userInterface:FlxUIGroup;
@@ -56,9 +60,16 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		ui = UI;
 		
 		userInterface = new FlxUIGroup();
+		
 		menuAttacks = cast ui.getAsset("attack_list");
 		userInterface.add(cast menuAttacks);
 		userInterface.add(cast ui.getAsset("attack_button"));
+		menuItems = cast ui.getAsset("item_list");
+		userInterface.add(cast menuItems);
+		userInterface.add(cast ui.getAsset("item_button"));
+		
+		menuAttacks.dropDirection = FlxUIDropDownMenuDropDirection.Down;
+		menuItems.dropDirection = FlxUIDropDownMenuDropDirection.Down;
 		
 		playerPos = cast ui.getAsset("player_position");
 		enemyPos = cast ui.getAsset("enemy_position");
@@ -96,6 +107,8 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			attackLabels.push(new StrNameLabel(attack.name, attack.name));
 		}
 		menuAttacks.setData(attackLabels);
+		
+		updateItems();
 		
 		switchState(ACTIVATING);
 		switchState(WAITING);
@@ -149,6 +162,24 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 		}
 	}
 	
+	public function useSelectedItem():Void
+	{
+		var strItem:String = menuItems.selectedId;
+		
+		var item:Item = player.items.filter(function(a){return a.name == strItem; })[0];
+		if (item.flavor == DEFENSIVE)
+		{
+			item.doEffect();
+		} 
+		else if (item.flavor == OFFENSIVE)
+		{
+			item.doEffect(enemy);
+		}
+		player.items.remove(item);
+		updateHealth();
+		updateItems();
+	}
+	
 	function updateHealth()
 	{
 		if (playerHealthBar.active && enemyHealthBar.active)
@@ -156,6 +187,16 @@ class CombatHUD extends FlxTypedGroup<FlxSprite>
 			playerHealthBar.text =  "" + player.health + " / " + player.maxHealth;
 			enemyHealthBar.text =  "" + enemy.health + " / " + enemy.maxHealth;
 		}
+	}
+	
+	private function updateItems()
+	{
+		itemLabels = new Array<StrNameLabel>();
+		for (item in player.items)
+		{
+			itemLabels.push(new StrNameLabel(item.name, item.name));
+		}
+		menuItems.setData(itemLabels);
 	}
 	
 	private function enemyDoAttackTurn():Void

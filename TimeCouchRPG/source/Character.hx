@@ -32,6 +32,18 @@ class Character extends FlxSprite
 		}
 	}
 	
+	public function addHealth(amt:Int):Void
+	{
+		if (health + amt > maxHealth)
+		{
+			health = maxHealth;
+		}
+		else
+		{
+			health = health + amt;
+		}
+	}
+	
 	public function setPos(pos:FlxPoint)
 	{
 		x = pos.x;

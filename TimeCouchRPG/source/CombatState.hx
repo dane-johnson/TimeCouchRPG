@@ -35,6 +35,11 @@ class CombatState extends FlxUIState
 					{
 						combatHUD.doSelectedAttack();
 					}
+				case 'item_button':
+					if (id == FlxUITypedButton.CLICK_EVENT)
+					{
+						combatHUD.useSelectedItem();
+					}
 			}
 		}
 	}

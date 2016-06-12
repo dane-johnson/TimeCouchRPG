@@ -13,6 +13,7 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
+import items.HealthPotion;
 
 class PlayState extends CombatState
 {
@@ -21,6 +22,7 @@ class PlayState extends CombatState
 	private var player:Player;
 	private var baddies:FlxTypedGroup<Enemy>;
 	private var ranges:FlxTypedGroup<Range>;
+	private var pickups:FlxTypedGroup<Item>;
 	
 	private var sndAlert:FlxSound;
 	private function loadAssets():Void
@@ -54,7 +56,10 @@ class PlayState extends CombatState
 		baddies = new FlxTypedGroup<Enemy>();
 		add(baddies);
 		
-		player = new Player(0, 0, PlayerName.AUSTIN);
+		pickups = new FlxTypedGroup<Item>();
+		add(pickups);
+		
+		player = new Player(0, 0, PlayerName.JOE);
 		map.loadEntities(placeEntities, "entities");
 		add(player);
 		
@@ -68,6 +73,7 @@ class PlayState extends CombatState
 		FlxG.collide(player, walls);
 		FlxG.overlap(player, ranges, onPlayerEnterRange);
 		FlxG.overlap(player, baddies, onPlayerCollideEnemy);
+		FlxG.overlap(player, pickups, onPlayerCollideItem);
 		super.update(elapsed);
 	}
 	
@@ -93,6 +99,13 @@ class PlayState extends CombatState
 		player.active = true;
 		//enter combat mode
 		initCombat(player, enemy);
+	}
+	
+	private function onPlayerCollideItem(P:Player, I:Item):Void
+	{
+		player.items.push(I);
+		I.parent = player;
+		I.kill();
 	}
 	
 	private function onEnemyAlerted(e:Enemy):Void
@@ -135,6 +148,10 @@ class PlayState extends CombatState
 			var height:Int = Std.parseInt(entityData.get("height"));
 			var enemyId = Std.parseInt(entityData.get("enemy_id"));
 			ranges.add(new Range(x, y, width, height, enemyId));
+		}
+		if (entityName == "health_potion")
+		{
+			pickups.add(new HealthPotion(x, y));
 		}
 	}
 }
