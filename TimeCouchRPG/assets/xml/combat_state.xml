@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<data>
+	<definition id="health_bar" x="0" y="0" width="40" height="20" color="red" align="center" />
+	
+		<sprite id="back" color="blue" x="0" y="0" width="300" height="300">
+			<anchor x="center" x-flush="center" y="center" y-flush="center" />
+		</sprite>
+		<sprite id="character_display" color="white" x="2" y="2" width="296" height="96"  >
+			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
+		</sprite>
+		<sprite id="action_display" color="white" x="2" y="102" width="296" height="196" >
+			<anchor x="back.left" x-flush="left" y="back.top" y-flush="top" />
+		</sprite>
+		<region id="player_position" x="-50" y="0" width="32" height="32" >
+			<anchor x="character_display.center" y="character_display.center" x-flush="center" y-flush="center" />
+		</region>
+		<region id="enemy_position" x="50" y="0" width="32" height="32" >
+			<anchor x="character_display.center" y="character_display.center" x-flush="center" y-flush="center" />
+		</region>
+		<text id="player_health" use_def="health_bar" text="player health here">
+			<anchor x="player_position.center" y="player_position.bottom" x-flush="center" y-flush="top" />
+		</text>
+		<text id="enemy_health" use_def="health_bar" text="enemy health here">
+			<anchor x="enemy_position.center" y="enemy_position.bottom" x-flush="center" y-flush="top" />
+		</text>
+		
+		<button id="attack_button" label="Attack" x="20" y="10">
+			<anchor x="action_display.left" y="action_display.top" x-flush="left" y-flush="top" />
+			<param type="string" value="attack_button" />
+		</button>
+		<dropdown id="attack_list" x="0" y="10" >
+			<anchor x="attack_button.center" y="attack_button.bottom" x-flush="center" y-flush="top" />
+			<param type="string" value="attack_list" />
+		</dropdown>
+		<button id="item_button" label="Use" x="-20" y="10">
+			<anchor x="action_display.right" y="action_display.top" x-flush="right" y-flush="top" />
+			<param type="string" value="item_button" />
+		</button>
+		<dropdown id="item_list" x="0" y="10" >
+			<anchor x="item_button.center" y="item_button.bottom" x-flush="center" y-flush="top" />
+			<param type="string" value="item_list" />
+		</dropdown>
+		
+</data>

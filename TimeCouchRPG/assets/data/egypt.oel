@@ -54,5 +54,10 @@
     <enemy id="6" x="1504" y="864" name="GUARD" enemy_id="3" />
     <enemy id="7" x="1056" y="832" name="PHAROH" enemy_id="4" />
     <sight_range id="8" x="1024" y="800" width="96" height="96" enemy_id="4" />
+    <health_potion id="9" x="768" y="608" />
+    <health_potion id="10" x="864" y="448" />
+    <health_potion id="11" x="1216" y="512" />
+    <health_potion id="12" x="1504" y="704" />
+    <health_potion id="13" x="1248" y="864" />
   </entities>
 </level>

@@ -11,6 +11,7 @@ import flixel.system.FlxAssets.FlxGraphicAsset;
 class Player extends Character
 {
 	
+	public var items:Array<Item>;
 	public var name:PlayerName;
 	public var speed:Float = 100;
 	
@@ -20,6 +21,7 @@ class Player extends Character
 	{
 		name = Name;
 		lastName = name;
+		items = new Array<Item>();
 		
 		super(X, Y);
 		assignImage();
@@ -45,10 +47,12 @@ class Player extends Character
 		switch (name)
 		{
 			case PlayerName.JOE:
-				health = 8;
+				maxHealth = 8;
 			case PlayerName.AUSTIN:
-				health = 5;
+				maxHealth = 5;
 		}
+		
+		health = maxHealth;
 	}
 	
 	override public function initAttacks():Void
@@ -56,10 +60,10 @@ class Player extends Character
 		switch (name)
 		{
 			case PlayerName.JOE:
-				attacks.add(new HolyBible(this));
-				attacks.add(new Suplex(this));
+				attacks.push(new HolyBible(this));
+				attacks.push(new Suplex(this));
 			case PlayerName.AUSTIN:
-				attacks.add(new DirectorsCut(this));
+				attacks.push(new DirectorsCut(this));
 		}
 	}
 	
@@ -76,7 +80,10 @@ class Player extends Character
 	
 	override public function update(elapsed:Float):Void
 	{
-		move();
+		if (!inCombat)
+		{
+			move();
+		}
 		super.update(elapsed);
 	}
 	

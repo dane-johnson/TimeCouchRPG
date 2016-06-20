@@ -13,14 +13,16 @@ import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import flixel.ui.FlxButton;
 import flixel.math.FlxMath;
+import items.HealthPotion;
 
-class PlayState extends FlxState
+class PlayState extends CombatState
 {
 	private var map:FlxOgmoLoader;
 	private var walls:FlxTilemap;
 	private var player:Player;
 	private var baddies:FlxTypedGroup<Enemy>;
 	private var ranges:FlxTypedGroup<Range>;
+	private var pickups:FlxTypedGroup<Item>;
 	
 	private var sndAlert:FlxSound;
 	private function loadAssets():Void
@@ -31,9 +33,12 @@ class PlayState extends FlxState
 	
 	override public function create():Void
 	{	
+		#if debug
+		FlxG.log.redirectTraces = true;
+		#end
+		
 		loadAssets();
 		
-		FlxG.log.redirectTraces = true;
 		map = new FlxOgmoLoader(AssetPaths.egypt__oel);
 		walls =  map.loadTilemap(AssetPaths.egypt__png, 32, 32, "walls");
 		walls.follow();
@@ -51,7 +56,10 @@ class PlayState extends FlxState
 		baddies = new FlxTypedGroup<Enemy>();
 		add(baddies);
 		
-		player = new Player(0, 0, PlayerName.AUSTIN);
+		pickups = new FlxTypedGroup<Item>();
+		add(pickups);
+		
+		player = new Player(0, 0, PlayerName.JOE);
 		map.loadEntities(placeEntities, "entities");
 		add(player);
 		
@@ -68,6 +76,7 @@ class PlayState extends FlxState
 		FlxG.collide(player, walls);
 		FlxG.overlap(player, ranges, onPlayerEnterRange);
 		FlxG.overlap(player, baddies, onPlayerCollideEnemy);
+		FlxG.overlap(player, pickups, onPlayerCollideItem);
 		super.update(elapsed);
 	}
 	
@@ -87,14 +96,25 @@ class PlayState extends FlxState
 	
 	private function onPlayerCollideEnemy(player:Player, enemy:Enemy):Void
 	{
-		//enter combat mode
-		enemy.kill();
+		//stop running baddie
+		enemy.velocity.set();
+		//reactivate player
 		player.active = true;
+		//enter combat mode
+		initCombat(player, enemy);
+	}
+	
+	private function onPlayerCollideItem(P:Player, I:Item):Void
+	{
+		player.items.push(I);
+		I.parent = player;
+		I.kill();
 	}
 	
 	private function onEnemyAlerted(e:Enemy):Void
 	{
 		//freeze the player
+		player.velocity.set();
 		player.active = false;
 		//run towards him
 		FlxVelocity.moveTowardsObject(e, player, 140);
@@ -119,9 +139,9 @@ class PlayState extends FlxState
 			switch (name)
 			{
 				case "PHAROH":
-					e = new Enemy(x, y, EnemyName.PHAROH, enemyId);
+					e = new Enemy(x, y, PHAROH, enemyId);
 				case "GUARD":
-					e = new Enemy(x, y, EnemyName.GUARD, enemyId);
+					e = new Enemy(x, y, GUARD, enemyId);
 			}
 			baddies.add(e);
 		}
@@ -131,6 +151,10 @@ class PlayState extends FlxState
 			var height:Int = Std.parseInt(entityData.get("height"));
 			var enemyId = Std.parseInt(entityData.get("enemy_id"));
 			ranges.add(new Range(x, y, width, height, enemyId));
+		}
+		if (entityName == "health_potion")
+		{
+			pickups.add(new HealthPotion(x, y));
 		}
 	}
 }
